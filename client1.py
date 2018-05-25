@@ -10,30 +10,37 @@ HOST = '192.168.81.88'
 PORT = 55555
 addr = (HOST, PORT)
 
-#只接收这么多bytes
-buffersize = 10
+#一次接收这么多bytes
+BUFFERSIZE = 1024
 
+# SOCK_DGRAM ：UDP数据报
 s = socket(AF_INET, SOCK_DGRAM)
 # socket类s去连接服务器
 s.connect((HOST, PORT))
 
+def client_print(*msg):
+    print("CLIENT: ", msg)
+
 while True:
-    kel = input('Question :>>')
-    #if kel == 'exit':
-    #    break
+    kel = input('Question >>')
+    if kel == 'exit':
+        break
+
+    client_print('input data: %s' % kel)
     # python3 socket 只能收发二进制数据，需要转码
     kel = kel.encode(encoding='utf-8')
-    print('input data: %r' % kel)
     #s.sendall(kel)
     # 发送数据
-    s.sendto(kel, addr)
-    #TODO: 目前客户端无法即使正常退出
-    #if kel == 'exit':
-    #    print('BYE! ')
-    #    break
-    # 接收数据
-    data, addr = s.recvfrom(buffersize)
-    print(data.decode(encoding='utf-8'), 'from', addr)
+    try:
+        s.sendto(kel, addr)
+        # 接收数据
+        data, addr = s.recvfrom(BUFFERSIZE)
+        client_print("recived message from server({0}:{1}) : {2}".format(addr[0], addr[1], data.decode('utf-8')))
+    except ConnectionRefusedError:
+        client_print("exit client")
+        s.close()
 
-s.close()
+if not s._closed:
+    s.close()
+
 sys.exit()
