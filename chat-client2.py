@@ -35,7 +35,7 @@ class Chat_client():
         self.prompt()
 
         while True:
-            socket_list = [sys.stdin, ]
+            socket_list = [sys.stdin, s]
 
             read_sockets, write_sockets, error_sockets = select.select(socket_list, [], [])
 
@@ -52,7 +52,7 @@ class Chat_client():
                         self.prompt()
                 else:
                     msg = sys.stdin.readline().strip()
-                    # print('===' + msg)
+                    print(msg)
                     # str encode to bytes
                     s.send(msg.encode('utf-8'))
                     self.prompt()
