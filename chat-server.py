@@ -7,8 +7,8 @@ class Chat_server():
     def __init__(self):
         self.CONNECTION_LIST = []
         self.RECV_BUFFER = 4096
-        self.ORT = 55555
-        self.LOCAL_ADDR = '127.0.0.1'
+        self.PORT = 55555
+        self.LOCAL_ADDR = '192.168.81.86'
         self.server_socket = None
         self.read_sockets, write_sockets, error_sockets = select.select(self.CONNECTION_LIST, [], [])
 
@@ -22,14 +22,18 @@ class Chat_server():
                     self.CONNECTION_LIST.remove(socket)
 
     def start_server(self):
+        # TCP socket
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        print("self.server_socket: %s" % self.server_socket)
         self.server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.server_socket.bind(("127.0.0.1", self.ORT))
-        self.server_socket.listen(10)
-
+        self.server_socket.bind((self.LOCAL_ADDR, self.PORT))
+        # self.server_socket.listen(10)
+        print("ok")
         self.CONNECTION_LIST.append(self.server_socket)
 
-        print("SERVER starts on localhost:", self.ORT)
+        addr = None
+
+        print("SERVER starts on localhost:", self.PORT)
 
         while True:
             # read_sockets, write_sockets, error_sockets = select.select(CONNECTION_LIST,[],[])
