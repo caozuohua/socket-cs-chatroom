@@ -44,8 +44,7 @@ def start_udp_server():
         with open(host.logfile, 'a') as f:
             log = "client{0} \t message: {1}\n".format(addr, data)
             f.write(log)
-    
-       
+
        # 回复消息
         s.sendto("SERVER ROGER THAT".encode(encoding='utf-8'), addr)
     
