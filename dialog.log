@@ -1,4 +1,0 @@
-client('192.168.81.86', 56031) 	 message: ha
-client('192.168.81.86', 56031) 	 message: ls
-client('192.168.81.86', 56031) 	 message: lsooskl
-client('192.168.81.86', 56031) 	 message: ddd
