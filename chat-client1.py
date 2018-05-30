@@ -10,9 +10,11 @@ class Chat_client():
         self.s = None
         self.RECV_BUFFER = 4096
 
-    def prompt(self):
-        sys.stdout.write('<YOU> ')
-        sys.stdout.flush()
+    def prompt(self, name='YOU', no_flush=False):
+        name = "<{0}> ".format(name)
+        sys.stdout.write(name)
+        if not no_flush:
+            sys.stdout.flush()
 
     def start_client(self):
 
@@ -35,27 +37,34 @@ class Chat_client():
         self.prompt()
 
         while True:
-            socket_list = [sys.stdin, ]
+            socket_list = [sys.stdin, s]
 
             read_sockets, write_sockets, error_sockets = select.select(socket_list, [], [])
 
             for sock in read_sockets:
                 if sock == s:
-                    data = sock.recv(self.RECV_BUFFER)
-                    if not data:
+                    # socket input
+                    # data, who = sock.recvfrom(self.RECV_BUFFER)
+                    # @data [bytes]
+                    data = sock.recv(self.RECV_BUFFER).strip().decode('utf-8')
+                    # print('data: ', data)
+                    if data is None:
                         print("\n Disconnected from chat server")
-                        # sys.exit()
-                        continue
+                        sys.exit()
                     else:
-                        # bytes decode to str
-                        sys.stdout.write(data.decode('utf-8'))
-                        self.prompt()
+                        sys.stdout.write('\n')
+                        self.prompt(sock.getsockname())
+                        print(data)
                 else:
+                    # console input
+                    # strip() filtered '\n' at the end, so that blank line will be ignored
                     msg = sys.stdin.readline().strip()
-                    # print('===' + msg)
+                    print('>>', msg)
+                    if msg.strip() == 'exit':
+                        sys.exit()
                     # str encode to bytes
                     s.send(msg.encode('utf-8'))
-                    self.prompt()
+                self.prompt()
         if not s.closed:
             s.close()
 

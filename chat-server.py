@@ -9,8 +9,6 @@ class Chat_server():
         self.RECV_BUFFER = 4096
         self.PORT = 55555
         self.LOCAL_ADDR = '192.168.81.86'
-        # self.server_socket = None
-        # read_sockets, write_sockets, error_sockets = select.select(self.CONNECTION_LIST, [], [])
 
     def broadcast_data(self, server_socket, sock, message):
         for socket in self.CONNECTION_LIST:
@@ -37,7 +35,7 @@ class Chat_server():
 
             for sock in read_sockets:
                 if sock == server_socket:
-                    (sockfd, addr) = server_socket.accept()
+                    sockfd, addr = server_socket.accept()
                     self.CONNECTION_LIST.append(sockfd)
                     print("CLIENT connected", addr)
                 else:
@@ -45,12 +43,12 @@ class Chat_server():
                         data = sock.recv(self.RECV_BUFFER)
                         if data:
                             self.broadcast_data(server_socket, sock, data)
-                    except:
-                        self.broadcast_data(sock, server_socket, "Client %s is offline" % addr)
-                    print("Client is offline", addr)
-                    sock.close()
-                    self.CONNECTION_LIST.remove(sock)
-                    continue
+                    except OSError:
+                        self.broadcast_data(sock, server_socket, "Client {0} is offline".format(addr))
+                        print("Client is offline", addr)
+                        sock.close()
+                        # self.CONNECTION_LIST.remove(sock)
+                        continue
         if not server_socket.closed:
             server_socket.close()
 
