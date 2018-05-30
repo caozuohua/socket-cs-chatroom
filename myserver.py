@@ -9,7 +9,10 @@ from socket import *
 import os
 
 class ServerAddr():
-    HOST = '192.168.81.86'
+<<<<<<< HEAD
+=======
+    HOST = '192.168.1.88'
+>>>>>>> bd0a525662721b0b3e58269c71dd0c04cb474c20
     PORT = 55555
     BUFFERSIZE = 1024
     logfile = 'dialog.log'
@@ -44,7 +47,12 @@ def start_udp_server():
         with open(host.logfile, 'a') as f:
             log = "client{0} \t message: {1}\n".format(addr, data)
             f.write(log)
+<<<<<<< HEAD
 
+=======
+    
+       
+>>>>>>> bd0a525662721b0b3e58269c71dd0c04cb474c20
        # 回复消息
         s.sendto("SERVER ROGER THAT".encode(encoding='utf-8'), addr)
     

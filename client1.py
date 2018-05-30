@@ -7,7 +7,10 @@ import socket
 from socket import *
 
 class ServerAddr():
-    HOST = '192.168.81.86'
+<<<<<<< HEAD
+=======
+    HOST = '192.168.1.88'
+>>>>>>> bd0a525662721b0b3e58269c71dd0c04cb474c20
     PORT = 55555
     BUFFERSIZE = 1024
 
