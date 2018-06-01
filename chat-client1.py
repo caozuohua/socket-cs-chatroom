@@ -53,7 +53,13 @@ class Chat_client():
                         sys.exit()
                     else:
                         sys.stdout.write('\n')
-                        self.prompt(sock.getsockname())
+                        # self.prompt(sock.getsockname())
+                        # -> getsockname() actually returns the address of the local endpoint
+                        # self.prompt(sock.getpeername())
+                        # -> getpeername() returns the address of the chat-server
+                        # so, neither of them are satisfied
+                        # TODO: to prompt address of the peer clients
+                        self.prompt(sock.getpeername())
                         print(data)
                 else:
                     # console input
@@ -68,6 +74,8 @@ class Chat_client():
         if not s.closed:
             s.close()
 
+
+# TODO: client authentication
 
 if __name__ == '__main__':
     c_c = Chat_client()

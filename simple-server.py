@@ -9,10 +9,7 @@ from socket import *
 import os
 
 class ServerAddr():
-<<<<<<< HEAD
-=======
-    HOST = '192.168.1.88'
->>>>>>> bd0a525662721b0b3e58269c71dd0c04cb474c20
+    HOST = '192.168.81.86'
     PORT = 55555
     BUFFERSIZE = 1024
     logfile = 'dialog.log'
@@ -39,7 +36,7 @@ def start_udp_server():
     
     # 简单地监听客户端的消息，收到消息后回复确认
     while True:
-        _server_print("=== THE SERVER START WORKING ===")
+        _server_print("==========")
        # 此处的s.recvfrom方法和s.recv都会返回接收到的数据，而recvfrom还会返回客户端的地址
         data, addr = s.recvfrom(host.BUFFERSIZE)
         data = data.decode(encoding='utf-8')
@@ -47,12 +44,6 @@ def start_udp_server():
         with open(host.logfile, 'a') as f:
             log = "client{0} \t message: {1}\n".format(addr, data)
             f.write(log)
-<<<<<<< HEAD
-
-=======
-    
-       
->>>>>>> bd0a525662721b0b3e58269c71dd0c04cb474c20
        # 回复消息
         s.sendto("SERVER ROGER THAT".encode(encoding='utf-8'), addr)
     

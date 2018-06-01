@@ -44,6 +44,7 @@ class Chat_server():
                         if data:
                             self.broadcast_data(server_socket, sock, data)
                     except OSError:
+                        # FIXME: this seems to will never be triggered
                         self.broadcast_data(sock, server_socket, "Client {0} is offline".format(addr))
                         print("Client is offline", addr)
                         sock.close()
