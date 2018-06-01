@@ -10,8 +10,8 @@ class Chat_client():
         self.s = None
         self.RECV_BUFFER = 4096
 
-    def prompt(self, name='YOU', no_flush=False):
-        name = "<{0}> ".format(name)
+    def prompt(self, name='<YOU>', no_flush=False):
+        name = "{0}".format(name)
         sys.stdout.write(name)
         if not no_flush:
             sys.stdout.flush()
@@ -48,18 +48,17 @@ class Chat_client():
                     # @data [bytes]
                     data = sock.recv(self.RECV_BUFFER).strip().decode('utf-8')
                     # print('data: ', data)
-                    if data is None:
+                    if data == '':
                         print("\n Disconnected from chat server")
                         sys.exit()
                     else:
                         sys.stdout.write('\n')
-                        # self.prompt(sock.getsockname())
+                        self.prompt(name='')
                         # -> getsockname() actually returns the address of the local endpoint
                         # self.prompt(sock.getpeername())
                         # -> getpeername() returns the address of the chat-server
-                        # so, neither of them are satisfied
+                        # so, neither of them are satisfied, actually.
                         # TODO: to prompt address of the peer clients
-                        self.prompt(sock.getpeername())
                         print(data)
                 else:
                     # console input
