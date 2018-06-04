@@ -20,12 +20,11 @@ class Chat_server():
         for socket in self.CONNECTION_LIST:
             if socket not in (server_socket, sock):
                 try:
-                    # FIXME: something wrron here!!!
-                    message = "<{0}:{1}> {2}".format(sock.getsockname()[0], sock.getpeername()[1], message)
+                    message = "<{0}:{1}> {2}".format(sock.getpeername()[0], sock.getpeername()[1], message)
+                    print(message)
                     socket.send(message.encode('utf-8'))
-                except OSError:
-                    socket.close()
-                    self.CONNECTION_LIST.remove(socket)
+                except :
+                    print("broadcast_data error")
 
     def start_server(self):
         # TCP socket
@@ -49,24 +48,22 @@ class Chat_server():
                 else:
                     try:
                         data = sock.recv(self.RECV_BUFFER).decode('utf-8')
-                        print("said : %s" % data)
                         if data:
                             self.broadcast_data(server_socket, sock, data)
                         else:
-                            self.broadcast_data(sock, server_socket, "Client {0} is offline".format(addr))
-                            print("Client is offline:", addr)
-                            read_sockets.remove(sock)
+                            self.CONNECTION_LIST.remove(sock)
+                            # broadcast to all online clients that someone is offline
+                            self.broadcast_data(server_socket, sock, "Client {0} is offline".format(sock.getpeername()))
+                            print("Client is offline:")
                             if not sock._closed:
                                 print("sock closed now")
                                 sock.close()
-                            #read_sockets.remove(sock)
                             continue
                     except OSError:
-                        # FIXME: this seems to will never be triggered
-                        self.broadcast_data(sock, server_socket, "Client {0} is offline".format(addr))
-                        print("Client is offline", addr)
+                        # self.broadcast_data(sock, server_socket, "Client {0} is offline".format(addr))
+                        print("Client is offline")
+                        print("sock: ", sock)
                         sock.close()
-                        # self.CONNECTION_LIST.remove(sock)
                         continue
         if not server_socket.closed:
             server_socket.close()

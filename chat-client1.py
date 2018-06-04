@@ -48,17 +48,12 @@ class Chat_client():
                     # @data [bytes]
                     data = sock.recv(self.RECV_BUFFER).strip().decode('utf-8')
                     # print('data: ', data)
-                    if data == '':
+                    if data is '':
                         print("\n Disconnected from chat server")
                         sys.exit()
                     else:
                         sys.stdout.write('\n')
                         self.prompt(name='')
-                        # -> getsockname() actually returns the address of the local endpoint
-                        # self.prompt(sock.getpeername())
-                        # -> getpeername() returns the address of the chat-server
-                        # so, neither of them are satisfied, actually.
-                        # TODO: to prompt address of the peer clients
                         print(data)
                 else:
                     # console input
