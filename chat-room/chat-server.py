@@ -17,12 +17,12 @@ class Chat_server():
         :param message: message to send to clients
         :return: don`t return
         '''
+        message_std = "<{0}:{1}> {2}".format(sock.getpeername()[0], sock.getpeername()[1], message)
+        print('broadcast_data:', message_std)
         for socket in self.CONNECTION_LIST:
             if socket not in (server_socket, sock):
                 try:
-                    message = "<{0}:{1}> {2}".format(sock.getpeername()[0], sock.getpeername()[1], message)
-                    print(message)
-                    socket.send(message.encode('utf-8'))
+                    socket.send(message_std.encode('utf-8'))
                 except :
                     print("broadcast_data error")
 
@@ -54,9 +54,8 @@ class Chat_server():
                             self.CONNECTION_LIST.remove(sock)
                             # broadcast to all online clients that someone is offline
                             self.broadcast_data(server_socket, sock, "Client {0} is offline".format(sock.getpeername()))
-                            print("Client is offline:")
+                            print("Client is offline:", sock.getpeername())
                             if not sock._closed:
-                                print("sock closed now")
                                 sock.close()
                             continue
                     except OSError:
