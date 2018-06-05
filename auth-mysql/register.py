@@ -1,4 +1,7 @@
-#!/usr/local/bin/python3
+#!/usr/bin/python3
+# encoding:utf-8
+
+import connect
 from connect import *
 import time
 import hashlib
@@ -12,10 +15,10 @@ def register():
     try:
         while True:
             name=input("输入你的名字：").strip()
-            cursor.execute("select count(*) from user where name=%s", name)
+            cursor.execute("select count(*) from user where uname=%s", name)
             count=cursor.fetchone()[0]
             length=len(name)
-            if count == 1:
+            if count >= 1:
                 print("用户名已存在！")
                 continue
             elif length<6:
@@ -24,12 +27,17 @@ def register():
             elif length>15:
                 print("用户名最多15个字符！")
                 continue
-            elif count == 0 and length>=6 and length=<15:
+            # elif count == 0 and length >= 6 and length =< 15:
+            elif count == 0 and (6 <= length <= 15):
                 password=input("输入你的密码：").strip()
-                time=int(time.time())
-                string=name+password+str(time)
+                # times = int(time.time())
+                times = time.strftime('%Y-%m-%d', time.localtime(time.time()))
+                string=name+password+str(times)
                 passwd=md5(string)
-                cursor.execute("insert into user(name,passwd,createtime) values(%s,%s,%s)",(name,passwd,time))
+                # DEBUG
+                # name: caozuohua, passwd: e80aecc629b111dacf4fe46a1c8934e5, times: 1528187011
+                print('name: %s, passwd: %s, times: %s' % (name, passwd, times))
+                cursor.execute("insert into user(uname, upwd, createtime) values(%s,%s,%s)", (name, passwd, times))
                 break
     except:
         conn.rollback()
