@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 # encoding:utf-8
 
-import connect
-from connect import *
+from authmysql.connect import *
 import time
 import hashlib
  
@@ -14,7 +13,7 @@ def md5(arg):
 def register():
     try:
         while True:
-            name=input("输入你的名字：").strip()
+            name=input("[注册]输入你的名字：").strip()
             cursor.execute("select count(*) from user where uname=%s", name)
             count=cursor.fetchone()[0]
             length=len(name)
@@ -29,20 +28,23 @@ def register():
                 continue
             # elif count == 0 and length >= 6 and length =< 15:
             elif count == 0 and (6 <= length <= 15):
-                password=input("输入你的密码：").strip()
+                password=input("[注册]输入你的密码：").strip()
                 # times = int(time.time())
                 times = time.strftime('%Y-%m-%d', time.localtime(time.time()))
                 string=name+password+str(times)
                 passwd=md5(string)
                 # DEBUG
                 # name: caozuohua, passwd: e80aecc629b111dacf4fe46a1c8934e5, times: 1528187011
-                print('name: %s, passwd: %s, times: %s' % (name, passwd, times))
+                print('[注册]name: %s, passwd: %s, times: %s' % (name, passwd, times))
                 cursor.execute("insert into user(uname, upwd, createtime) values(%s,%s,%s)", (name, passwd, times))
-                break
+                #if cursor.fetchone()[0] is not None:
+                print("Registered succeed!")
+                conn.commit()
+                return 0
     except:
         conn.rollback()
-    else:
-        conn.commit()
     conn.close()
-     
-register()
+
+
+if __name__ == '__main__':
+    register()

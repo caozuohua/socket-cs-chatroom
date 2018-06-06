@@ -2,6 +2,8 @@
 # encoding:utf-8
 
 import socket, select, sys
+from authmysql import *
+
 
 class Chat_client():
     def __init__(self):
@@ -69,8 +71,20 @@ class Chat_client():
             s.close()
 
 
-# TODO: client authentication
+def start():
+    if login.login() == 0:
+        print("login succeed!")
+    else:
+        print("[登录]您的账户不存在！")
+        ans = input("[登录]是否注册？(y/n)")
+        if ans not in ('y', 'Y'):
+            sys.exit()
+        register.register()
+        login.login()
+    Chat_client().start_client()
+
 
 if __name__ == '__main__':
-    c_c = Chat_client()
-    c_c.start_client()
+    # c_c = Chat_client()
+    # c_c.start_client()
+    start()
